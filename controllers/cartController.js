@@ -75,7 +75,7 @@ exports.addToCart = async (req, res) => {
 exports.removeFromCart = async (req, res) => {
   try {
     const productId = req.params.productId; // Extract productId from URL parameter
-    const { id } = req.id; // Assuming your user object has an "_id" field
+    const { id } = req.id;
 
     // Find the user by their ID and ensure they exist
     const user = await User.findOne({ id });
@@ -101,18 +101,14 @@ exports.removeFromCart = async (req, res) => {
 // Retrieve the user's cart with the list of products
 exports.getCart = async (req, res) => {
   try {
-    const { id } = req.id; // Assuming your user object has an "_id" field
-
+    const { id } = req.id;
     // Find the user by their ID and ensure they exist
     const user = await User.findOne({ id });
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
 
-    // Populate the products field in the user's cart to get detailed product information
-    const carts = await Cart.find({})
-      .populate("user") // 'user' should match the field name in your Cart schema
-      .exec();
+    const carts = await Cart.find({}).populate("user").exec();
 
     // Send the populated cart in the response
     res.status(200).json({ cart: carts });
